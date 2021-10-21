@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { Suspense } from "react";
+import "./App.css";
+import { Select } from "antd";
+import i18n from "i18next";
+import { initReactI18next, useTranslation } from "react-i18next";
+// ---------------------------------------------------------------
+const translationsEn = { welcome: "Welcome!!!" };
+const translationVi = { welcome: "Xin chào!!!" };
 
-function App() {
+i18n.use(initReactI18next).init({
+  resources: {
+    en: { translation: translationsEn },
+    vi: { translation: translationVi },
+  },
+  lng: "en",
+  fallbackLng: "en",
+  interpolation: {
+    escapeValue: false,
+  },
+});
+// ---------------------------------------------------------------
+const App = () => {
+  const { t } = useTranslation();
+
+  const onChange = (e) => {
+    i18n.changeLanguage(e);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Suspense fallback="Loading...">
+      <div className="App">
+        <header className="App-header">
+          <h1>{t("welcome")}</h1>
+          <Select
+            style={{ width: "120px", textAlign: "left" }}
+            name="language"
+            onChange={onChange}
+            placeholder="English"
+          >
+            <option value="en">English</option>
+            <option value="vi">Vietnamese</option>
+          </Select>
+        </header>
+      </div>
+    </Suspense>
   );
-}
+};
 
 export default App;
